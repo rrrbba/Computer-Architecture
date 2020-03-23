@@ -63,3 +63,30 @@ class CPU:
     def run(self):
         """Run the CPU."""
         pass
+
+
+# Add list properties to the CPU class to hold 256 bytes of memory and general-purpose registers
+    #Also add properties for any internal registers
+
+#In CPU, add method ram_read() and ram_write() that access the RAM inside the CPU object
+    #ram_read() should accept the address to read and return the value stored there
+    #ram_write() should accept a value to write, and address to write it to
+
+#Implement the core of the CPU's run() method
+    # needs to read to memory address that's stored in register PC -> store that result in IR, the Instruction Register. This can just be a local variable in run()
+    # some instructions requires up to the next bytes of data after the PC in memory
+    # using ram_read(), read the bytes at pc + 1 and pc + 2 from RAM into variables operand_a and operand_b in case the instruction needs them
+    # Depending on the value of the opcode, perform the actions needed for the instruction per the LS-8 spec. (if-elif)
+    # the PC needs to be updated to point to the next instruction for the next iteration of the loop in run()
+
+#Implement the HLT instruction handler to cpu.py
+    # So that you can refer to it by name instead of by numeric value
+    # in run() in your switch, exit the loop if a HLT instruction is encountered, regardless of whether or not there are more lines of code in the LS-8 program 
+    # consider HLY similar to exit()
+
+# Add the LDI instruction 
+    # This instruction sets a specified register to a specified value
+
+# Add the PRN instruction
+    # Similar to adding LDI, but the handler is simpler
+    # At this point, you can run the program and have it print 8 to console.
