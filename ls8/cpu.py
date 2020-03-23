@@ -2,15 +2,17 @@
 
 import sys
 
+#Opcodes = instructions
 LDI = 0b10000010 # Set the value of a register to an integer.
 PRN = 0b01000111 # Print numeric value stored in the given register.
 HLT = 0b00000001 # Halt the CPU (and exit the emulator).
+
 class CPU:
     """Main CPU class."""
 
     def __init__(self):
         """Construct a new CPU."""
-        self.reg = [0] * 8 #general purpose register
+        self.reg = [0] * 8 #general purpose register (has 8 bits)
         self.ram = [0] * 256 #to hold 256 bytes of memory
         self.pc = 0 #program counter
 
@@ -39,7 +41,7 @@ class CPU:
             0b01000111, # PRN R0
             0b00000000,
             0b00000001, # HLT
-        ]
+        ] #0b because binary and we prefix like that in python 0x for hexidecimal
 
         for instruction in program:
             self.ram[address] = instruction
@@ -80,7 +82,7 @@ class CPU:
         running = True
 
         while running: 
-            opcode = self.ram[self.pc]
+            opcode = self.ram[self.pc] #needs to read memory address that's stored in register
             operand_a = self.ram_read(self.pc + 1) 
             operand_b = self.ram_read(self.pc + 2)
 
@@ -128,3 +130,4 @@ class CPU:
     # Similar to adding LDI, but the handler is simpler
     # At this point, you can run the program and have it print 8 to console.
     # a pseudo-instruction that prints the numeric value stored in a register
+
