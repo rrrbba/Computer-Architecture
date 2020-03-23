@@ -2,12 +2,27 @@
 
 import sys
 
+LDI = 0b10000010 # Set the value of a register to an integer.
+PRN = 0b01000111 # Print numeric value stored in the given register.
+HLT = 0b00000001 # Halt the CPU (and exit the emulator).
 class CPU:
     """Main CPU class."""
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.reg = [0] * 8 #general purpose register
+        self.ram = [0] * 256 #to hold 256 bytes of memory
+        self.pc = 0 #program counter
+
+    def ram_read(self, mar): 
+        #should accept the address to read and 
+        mdr = self.ram[mar] #MAR = contains ADDRESS that is being read or written to
+        #return the value stored there
+        return mdr #MDR = contains the DATA that was read or the data to write
+
+    def ram_write(self, mar, value):
+        #should accept a value to write, and address to write it to
+        self.ram[mar] = value
 
     def load(self):
         """Load a program into memory."""
@@ -62,7 +77,27 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        running = True
+
+        while running: 
+            opcode = self.ram[self.pc]
+            operand_a = self.ram_read(self.pc + 1) 
+            operand_b = self.ram_read(self.pc + 2)
+
+            if opcode == LDI: # sets a specified register to a specified value
+                self.reg[operand_a] = operand_b
+                self.pc += 3 # skip down 3 to PRN
+
+            elif opcode == PRN: # prints the numeric value stored in a register
+                print(self.reg[operand_a])
+                self.pc += 2 #skip down 2 to HLT
+
+            elif opcode == HLT:
+                running = False 
+
+            else:
+                print(f"Unknown instruction: {opcode}")
+                sys.exit(1)
 
 
 # Add list properties to the CPU class to hold 256 bytes of memory and general-purpose registers
@@ -82,11 +117,14 @@ class CPU:
 #Implement the HLT instruction handler to cpu.py
     # So that you can refer to it by name instead of by numeric value
     # in run() in your switch, exit the loop if a HLT instruction is encountered, regardless of whether or not there are more lines of code in the LS-8 program 
-    # consider HLY similar to exit()
+    # consider HLT similar to exit()
+    # halt the CPU and exits the emulator
 
-# Add the LDI instruction 
+# Add the LDI instruction handler
     # This instruction sets a specified register to a specified value
+    # load "immediate", store a value in a register, or "set this register to this value"
 
-# Add the PRN instruction
+# Add the PRN instruction handler
     # Similar to adding LDI, but the handler is simpler
     # At this point, you can run the program and have it print 8 to console.
+    # a pseudo-instruction that prints the numeric value stored in a register
