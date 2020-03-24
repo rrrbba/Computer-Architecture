@@ -32,31 +32,28 @@ class CPU:
         address = 0
 
         try:
-        with open(program) as f:
-            for line in f:
-                # Ignore comments
-                comment_split = line.split("#")
-​
-                # Strip out whitespace
-                num = comment_split[0].strip()
-​
-                # Ignore blank lines
-                if num == '':
-                    continue
-​
-                opcode = int(num)
-                self.ram[address] = opcode
-                address += 1
+            with open(program) as p:
+                for line in p:
+                    # Ignore comments
+                    comment_split = line.split("#")
+    ​
+                    # Strip out whitespace
+                    num = comment_split[0].strip()
+    ​
+                    # Ignore blank lines
+                    if num == '':
+                        continue
+    ​
+                    opcode = int(num)
+                    self.ram[address] = opcode
+                    address += 1
 ​
         except FileNotFoundError:
             print("File not found")
             sys.exit(2)
 ​
-
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
-
+    program = sys.argv[1]
+    load(program)
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
