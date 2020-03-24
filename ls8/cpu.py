@@ -24,24 +24,34 @@ class CPU:
 
     def ram_write(self, mar, value):
         #should accept a value to write, and address to write it to
-        self.ram[mar] = value
+        self.ram[mar] = value #can put mdr instead of value
 
-    def load(self):
+    def load(self, program):
         """Load a program into memory."""
 
         address = 0
 
-        # For now, we've just hardcoded a program:
-
-        program = [
-            # From print8.ls8
-            0b10000010, # LDI R0,8
-            0b00000000,
-            0b00001000,
-            0b01000111, # PRN R0
-            0b00000000,
-            0b00000001, # HLT
-        ] #0b because binary and we prefix like that in python 0x for hexidecimal
+        try:
+        with open(program) as f:
+            for line in f:
+                # Ignore comments
+                comment_split = line.split("#")
+​
+                # Strip out whitespace
+                num = comment_split[0].strip()
+​
+                # Ignore blank lines
+                if num == '':
+                    continue
+​
+                opcode = int(num)
+                self.ram[address] = opcode
+                address += 1
+​
+        except FileNotFoundError:
+            print("File not found")
+            sys.exit(2)
+​
 
         for instruction in program:
             self.ram[address] = instruction

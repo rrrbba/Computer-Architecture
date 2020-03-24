@@ -14,22 +14,7 @@ PRINT_REGISTER = 5 #Print value from register
 ADD = 6 #regA += regB (like ls8)
 
 
-memory = [
-  PRINT_BEEJ,
-  SAVE,
-  65,
-  2,
-  SAVE,
-  20,
-  3,
-  ADD,
-  2,
-  3,
-  PRINT_REGISTER,
-  2,
-  HALT
-
-]
+memory = [None] *256
 
 #register are in hardware, extremely fast but small. Can only hold one word(base unit of data measurement) 64 bit -> each register will hold a 64 bit architecture
 register = [0] * 8
@@ -37,9 +22,41 @@ register = [0] * 8
 #program counter -> what instruction to run
 pc = 0
 
+
 #flag
 running = True
 
+def load_memory(filename):
+    address = 0
+    try:
+        with open(filename) as f:
+            for line in f:
+​
+                # Ignore comments
+                comment_split = line.split("#")
+​
+                # Strip out whitespace
+                num = comment_split[0].strip()
+​
+                # Ignore blank lines
+                if num == '':
+                    continue
+​
+                val = int(num)
+                memory[address] = val
+                address += 1
+​
+    except FileNotFoundError:
+        print("File not found")
+        sys.exit(2)
+​
+​
+if len(sys.argv) != 2:
+    print("usage: simple.py filename")
+    sys.exit(1)
+​
+filename = sys.argv[1]
+load_memory(filename)
 while running:
     command = memory[pc]
 
