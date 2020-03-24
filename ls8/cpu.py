@@ -31,7 +31,7 @@ class CPU:
         """Load a program into memory."""
 
         address = 0
-
+        program = sys.argv[1]
         try:
             with open(program) as p:
                 for line in p:
@@ -42,8 +42,8 @@ class CPU:
                     # Ignore blank lines
                     if num == '':
                         continue
-                    opcode = int(num)
-                    self.ram[address] = opcode
+                    instruction = int(num, 2) #base 2
+                    self.ram[address] = instruction
                     address += 1
         except FileNotFoundError:
             print("File not found")
@@ -96,6 +96,10 @@ class CPU:
             elif opcode == PRN: # prints the numeric value stored in a register
                 print(self.reg[operand_a])
                 self.pc += 2 #skip down 2 to HLT
+
+            elif opcode == MUL:
+                self.alu("MUL", operand_a, operand_b)
+                self.pc += 3
 
             elif opcode == HLT:
                 running = False 
