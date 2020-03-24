@@ -6,6 +6,7 @@ import sys
 LDI = 0b10000010 # Set the value of a register to an integer.
 PRN = 0b01000111 # Print numeric value stored in the given register.
 HLT = 0b00000001 # Halt the CPU (and exit the emulator).
+MUL = 0b10100010 # Multiply the values in two registers together and store the result in registerA
 
 class CPU:
     """Main CPU class."""
@@ -54,7 +55,8 @@ class CPU:
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+        elif op == "MUL": # Multiply the values in two registers together and store the result in registerA
+            self.reg[reg_a] *= self.reg[reg_b]
         else:
             raise Exception("Unsupported ALU operation")
 
