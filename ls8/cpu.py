@@ -43,7 +43,7 @@ class CPU:
                     if num == '':
                         continue
                     instruction = int(num, 2) #base 2
-                    self.ram[address] = instruction
+                    self.ram[address] = instruction #memory[address]
                     address += 1
         except FileNotFoundError:
             print("File not found")
@@ -97,9 +97,9 @@ class CPU:
                 print(self.reg[operand_a])
                 self.pc += 2 #skip down 2 to HLT
 
-            elif opcode == MUL:
-                self.alu("MUL", operand_a, operand_b)
-                self.pc += 3
+            elif opcode == MUL: # Multiply the values in two registers together and store the result in registerA
+                self.alu("MUL", operand_a, operand_b) #call the alu.mul and use operand_a and operand_b
+                self.pc += 3 #increment the program counter 3
 
             elif opcode == HLT:
                 running = False 
