@@ -181,3 +181,7 @@ class CPU:
     # At this point, you can run the program and have it print 8 to console.
     # a pseudo-instruction that prints the numeric value stored in a register
 
+#PUSH and POP (the stack)
+    # so the stack is in memory (self.ram). It starts at self.ram[F3] as per the spec, and the stack pointer points to the value at the top of the stack. Since the stack is "growing down" in memory, the stack pointer is decremented every time something is added to the top. 
+    # so if the stack is empty and we push two values, the stack pointer becomes F2 (pointing to the top value).
+    # we initialize our stack pointer to F4 instead of F3 because at the beginning there’s nothing in it
