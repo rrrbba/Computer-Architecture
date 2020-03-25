@@ -113,6 +113,14 @@ class CPU:
     def handle_HLT(self):
         sys.exit(0) #exit without an error unlike sys.exit 1 which means an error
 
+    def handle_POP(self):
+        reg = self.ram_read(self.pc +1)
+        value = self.ram_read(self.reg[SP]) #calls memory and gets the F5 value
+        #Copy the value
+        self.reg[reg] = value
+        #increment the stack pointer
+        self.reg[SP] += 1
+        self.pc += 2
 
     def run(self):
         """Run the CPU."""
