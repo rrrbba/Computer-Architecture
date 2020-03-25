@@ -16,6 +16,11 @@ class CPU:
         self.reg = [0] * 8 #general purpose register (has 8 bits)
         self.ram = [0] * 256 #to hold 256 bytes of memory
         self.pc = 0 #program counter
+        self.branchtable = {}
+        self.branchtable[LDI] = self.LDI
+        self.branchtable[PRN] = self.PRN
+        self.branchtable[HLT] = self.HLT
+        self.branchtable[MUL] = self.MUL
 
     def ram_read(self, mar): 
         #should accept the address to read and 

@@ -12,7 +12,8 @@ PRINT_NUM = 3
 SAVE = 4 #Save a value to a register
 PRINT_REGISTER = 5 #Print value from register
 ADD = 6 #regA += regB (like ls8)
-
+PUSH = 7
+POP = 8
 
 memory = [None] *256
 
@@ -22,7 +23,7 @@ register = [0] * 8
 #program counter -> what instruction to run
 pc = 0
 
-
+SP = 7 #means it points to register 7 (this is the stack pointer)
 #flag
 running = True
 
@@ -58,6 +59,8 @@ if len(sys.argv) != 2:
 filename = sys.argv[1]
 load_memory(filename)
 while running:
+    print(memory)
+    print(register)
     command = memory[pc]
 
     if command == PRINT_BEEJ:
@@ -87,6 +90,24 @@ while running:
         reg_b = memory[pc + 2]
         register[reg_a] += register[reg_b]
         pc += 3 
+
+    elif command == PUSH:
+        reg = memory[pc+1]
+        value = register[reg]
+        #Decrement the stack pointer
+        register[SP] -= 1 #= (Register[SP]-1 % (len(memory)))
+        #Copy the value  in given register tot he address pointed to by stack pointer
+        memory[register[SP]] = value
+        pc += 2 #because one argument
+
+    elif command == POP:
+        reg = memory[pc+1]
+        value = memory[register[SP]] #calls memory and gets the F5 value
+        #Copy the value
+        register[reg] = value
+        #increment the stack pointer
+        register[SP] += 1
+        pc += 2
 
     else:
         print(f"Unknown instruction: {command}")
