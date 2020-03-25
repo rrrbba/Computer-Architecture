@@ -17,10 +17,10 @@ class CPU:
         self.ram = [0] * 256 #to hold 256 bytes of memory
         self.pc = 0 #program counter
         self.branchtable = {}
-        self.branchtable[LDI] = self.LDI
-        self.branchtable[PRN] = self.PRN
-        self.branchtable[HLT] = self.HLT
-        self.branchtable[MUL] = self.MUL
+        self.branchtable[LDI] = self.handle_LDI
+        self.branchtable[PRN] = self.handle_PRN
+        self.branchtable[HLT] = self.handle_HLT
+        self.branchtable[MUL] = self.handle_MUL
 
     def ram_read(self, mar): 
         #should accept the address to read and 
@@ -85,34 +85,49 @@ class CPU:
 
         print()
 
+    def handle_LDI(self): # sets a specified register to a specified value
+        operand_a = self.ram_read(self.pc + 1) 
+        operand_b = self.ram_read(self.pc + 2)
+
+        self.reg[operand_a] = operand_b
+        self.pc += 3 # skip down 3 to PRN
+
+    def handle_PRN(self): # prints the numeric value stored in a register
+        operand_a = self.ram_read(self.pc + 1) 
+
+        print(self.reg[operand_a])
+        self.pc += 2 #skip down 2 to HLT
+
+    def handle_MUL(self): # Multiply the values in two registers together and store the result in registerA
+        operand_a = self.ram_read(self.pc + 1) 
+        operand_b = self.ram_read(self.pc + 2)
+
+        self.alu("MUL", operand_a, operand_b) #call the alu.mul and use operand_a and operand_b
+        self.pc += 3 #increment the program counter 3
+
+    def handle_HLT(self):
+        sys.exit(0) #exit without an error unlike sys.exit 1 which means an error
+
+
     def run(self):
         """Run the CPU."""
+
         running = True
 
         while running: 
-            opcode = self.ram[self.pc] #needs to read memory address that's stored in register
-            operand_a = self.ram_read(self.pc + 1) 
-            operand_b = self.ram_read(self.pc + 2)
+            IR = self.ram[self.pc] #fetch value from RAM and then use that value to look up handler function in the branch table
+            self.branchtable[IR]()
 
-            if opcode == LDI: # sets a specified register to a specified value
-                self.reg[operand_a] = operand_b
-                self.pc += 3 # skip down 3 to PRN
 
-            elif opcode == PRN: # prints the numeric value stored in a register
-                print(self.reg[operand_a])
-                self.pc += 2 #skip down 2 to HLT
 
-            elif opcode == MUL: # Multiply the values in two registers together and store the result in registerA
-                self.alu("MUL", operand_a, operand_b) #call the alu.mul and use operand_a and operand_b
-                self.pc += 3 #increment the program counter 3
 
-            elif opcode == HLT:
-                running = False 
 
-            else:
-                print(f"Unknown instruction: {opcode}")
-                sys.exit(1)
 
+
+
+
+
+            
 
 # Add list properties to the CPU class to hold 256 bytes of memory and general-purpose registers
     #Also add properties for any internal registers
