@@ -122,6 +122,16 @@ class CPU:
         self.reg[SP] += 1
         self.pc += 2
 
+    def handle_PUSH(self):
+        reg = self.ram_read(self.pc+1)
+        value = self.reg[reg]
+        #Decrement the stack pointer
+        self.reg[SP] -= 1 #= (Register[SP]-1 % (len(memory)))
+        #Copy the value  in given register tot he address pointed to by stack pointer
+        self.ram_write(self.reg[SP], value)
+        self.pc += 2 #because one argument
+
+
     def run(self):
         """Run the CPU."""
 
