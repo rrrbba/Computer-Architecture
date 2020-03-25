@@ -7,6 +7,9 @@ LDI = 0b10000010 # Set the value of a register to an integer.
 PRN = 0b01000111 # Print numeric value stored in the given register.
 HLT = 0b00000001 # Halt the CPU (and exit the emulator).
 MUL = 0b10100010 # Multiply the values in two registers together and store the result in registerA
+POP = 0b01000110 # Pop the value at the top of the stack into the given register.
+PUSH = 0b01000101 # Push the value in the given register on the stack.
+SP = 7 
 
 class CPU:
     """Main CPU class."""
@@ -21,6 +24,8 @@ class CPU:
         self.branchtable[PRN] = self.handle_PRN
         self.branchtable[HLT] = self.handle_HLT
         self.branchtable[MUL] = self.handle_MUL
+        self.branchtable[POP] = self.handle_POP
+        self.branchtable[PUSH] = self.handle_PUSH
 
     def ram_read(self, mar): 
         #should accept the address to read and 
@@ -127,7 +132,7 @@ class CPU:
 
 
 
-            
+
 
 # Add list properties to the CPU class to hold 256 bytes of memory and general-purpose registers
     #Also add properties for any internal registers
