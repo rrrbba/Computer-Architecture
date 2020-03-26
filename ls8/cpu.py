@@ -11,6 +11,7 @@ POP = 0b01000110 # Pop the value at the top of the stack into the given register
 PUSH = 0b01000101 # Push the value in the given register on the stack.
 CALL = 0b01010000
 RET = 0b00010001
+ADD = 0b10100000
 SP = 7 
 
 class CPU:
@@ -30,6 +31,8 @@ class CPU:
         self.branchtable[PUSH] = self.handle_PUSH
         self.branchtable[CALL] = self.handle_CALL
         self.branchtable[RET] = self.handle_RET
+        self.branchtable[ADD] = self.handle_ADD
+        
 
     def ram_read(self, mar): 
         #should accept the address to read and 
@@ -113,6 +116,13 @@ class CPU:
 
         self.alu("MUL", operand_a, operand_b) #call the alu.mul and use operand_a and operand_b
         self.pc += 3 #increment the program counter 3
+    
+    def handle_ADD(self): # Add the value in two registers and store the result in registerA.
+        operand_a = self.ram_read(self.pc + 1) 
+        operand_b = self.ram_read(self.pc + 2)
+
+        self.alu("ADD", operand_a, operand_b)
+        self.pc += 3
 
     def handle_HLT(self):
         sys.exit(0) #exit without an error unlike sys.exit 1 which means an error
@@ -146,12 +156,14 @@ class CPU:
         # The PC can move forward or backwards from its current location.
         reg = self.ram_read(self.pc + 1)
         self.pc = self.reg[reg]
+        
 
     def handle_RET(self):
         # Return from subroutine.
         # Pop the value from the top of the stack and store it in the PC.
         self.pc = self.ram[self.reg[SP]]
         self.reg[SP] += 1
+        
 
     def run(self):
         """Run the CPU."""
