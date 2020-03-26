@@ -14,8 +14,10 @@ PRINT_REGISTER = 5 #Print value from register
 ADD = 6 #regA += regB (like ls8)
 PUSH = 7
 POP = 8
+CALL = 9
+RET = 10
 
-memory = [None] *256
+memory = [0] *256
 
 #register are in hardware, extremely fast but small. Can only hold one word(base unit of data measurement) 64 bit -> each register will hold a 64 bit architecture
 register = [0] * 8
@@ -108,6 +110,25 @@ while running:
         #increment the stack pointer
         register[SP] += 1
         pc += 2
+
+    elif command == CALL:
+        # The address of the instruction directly after CALL is pushed onto the stack.
+        # This allows us to return to where we left off when the subroutine finishes executing.
+        register[SP] -= 1
+        memory[register[SP]] = pc + 2
+​
+        # The PC is set to the address stored in the given register.
+        # We jump to that location in RAM and execute the first instruction in the subroutine.
+        # The PC can move forward or backwards from its current location.
+        reg = memory[pc + 1]
+        pc = register[reg]
+​
+    elif command == RET:
+        # Return from subroutine.
+        # Pop the value from the top of the stack and store it in the PC.
+        pc = memory[register[SP]]
+        register[SP] += 1
+
 
     else:
         print(f"Unknown instruction: {command}")

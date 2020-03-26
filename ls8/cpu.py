@@ -9,6 +9,8 @@ HLT = 0b00000001 # Halt the CPU (and exit the emulator).
 MUL = 0b10100010 # Multiply the values in two registers together and store the result in registerA
 POP = 0b01000110 # Pop the value at the top of the stack into the given register.
 PUSH = 0b01000101 # Push the value in the given register on the stack.
+CALL = 0b01010000
+RET = 0b00010001
 SP = 7 
 
 class CPU:
@@ -26,6 +28,8 @@ class CPU:
         self.branchtable[MUL] = self.handle_MUL
         self.branchtable[POP] = self.handle_POP
         self.branchtable[PUSH] = self.handle_PUSH
+        self.branchtable[CALL] = self.handle_CALL
+        self.branchtable[RET] = self.handle_RET
 
     def ram_read(self, mar): 
         #should accept the address to read and 
