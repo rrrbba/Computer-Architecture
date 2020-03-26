@@ -135,6 +135,23 @@ class CPU:
         self.ram_write(self.reg[SP], value)
         self.pc += 2 #because one argument
 
+    def handle_CALL(self):
+        # The address of the instruction directly after CALL is pushed onto the stack.
+        # This allows us to return to where we left off when the subroutine finishes executing.
+        self.reg[SP] -= 1
+        address = self.pc + 2
+        self.ram[self.reg[SP]] = address
+        # The PC is set to the address stored in the given register.
+        # We jump to that location in RAM and execute the first instruction in the subroutine.
+        # The PC can move forward or backwards from its current location.
+        reg = self.ram_read(self.pc + 1)
+        self.pc = self.reg[reg]
+
+    def handle_RET(self):
+        # Return from subroutine.
+        # Pop the value from the top of the stack and store it in the PC.
+        self.pc = self.ram[self.reg[SP]]
+        self.reg[SP] += 1
 
     def run(self):
         """Run the CPU."""
